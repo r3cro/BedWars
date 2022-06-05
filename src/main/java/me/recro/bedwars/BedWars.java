@@ -2,6 +2,7 @@ package me.recro.bedwars;
 
 import lombok.Getter;
 import me.recro.bedwars.core.GameArena;
+import me.recro.bedwars.utils.DataFile;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -14,6 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class BedWars extends JavaPlugin {
 
     private GameArena gameArena;
+
+    private DataFile configFile;
 
     @Override
     public void onEnable() {
@@ -30,6 +33,7 @@ public final class BedWars extends JavaPlugin {
             }
         }
         registerListeners();
+        this.configFile = new DataFile(this, "config");
     }
 
     @Override
@@ -39,6 +43,10 @@ public final class BedWars extends JavaPlugin {
 
     private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
+    }
+
+    public DataFile getConfigFile() {
+        return this.configFile;
     }
 
 }
