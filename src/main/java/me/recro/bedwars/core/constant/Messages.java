@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public enum Messages {
-    GAME_NOT_RUNNING("&cgame is not currently running"),
+    GAME_NOT_RUNNING("&cGame is not currently running"),
     GAME_OVER("&cGame is over"),
     RELOADING("&aReloading...");
 
