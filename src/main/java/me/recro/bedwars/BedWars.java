@@ -2,6 +2,10 @@ package me.recro.bedwars;
 
 import lombok.Getter;
 import me.recro.bedwars.core.GameArena;
+import me.recro.bedwars.listeners.PlayerDeath;
+import me.recro.bedwars.listeners.PlayerJoin;
+import me.recro.bedwars.listeners.PlayerQuit;
+import me.recro.bedwars.listeners.ServerListener;
 import me.recro.bedwars.utils.DataFile;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -43,6 +47,11 @@ public final class BedWars extends JavaPlugin {
 
     private void registerListeners() {
         PluginManager pluginManager = Bukkit.getPluginManager();
+
+        pluginManager.registerEvents(new PlayerDeath(this), this);
+        pluginManager.registerEvents(new PlayerJoin(), this);
+        pluginManager.registerEvents(new PlayerQuit(), this);
+        pluginManager.registerEvents(new ServerListener(), this);
     }
 
     public DataFile getConfigFile() {
