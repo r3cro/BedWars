@@ -12,10 +12,13 @@ import me.recro.bedwars.core.constant.tasks.GameResetTask;
 import me.recro.bedwars.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+
+import static org.bukkit.Bukkit.getWorlds;
 
 public class GameArena {
 
@@ -100,6 +103,7 @@ public class GameArena {
     public void startGame() {
         Bukkit.getPluginManager().callEvent(new GameStartEvent());
         this.handleStart();
+        Bukkit.getConsoleSender().sendMessage(Utils.color("&aStart game method"));
     }
 
     public void endGame() {
@@ -121,7 +125,38 @@ public class GameArena {
     }
 
     public void handleStart() {
+        if(!isMinimumMet()) {
+            Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start (min not met)"));
+            gameState = GameState.WAITING;
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.getInventory().clear();
+                player.getInventory().setArmorContents(null);
+            }
+            return;
+        }
+        gameState = GameState.STARTING;
 
+        Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start"));
+
+        int index = 0; // use to loop through spawn points
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.getInventory().clear();
+            player.getInventory().setArmorContents(null);
+            player.setFireTicks(0);
+            player.setHealth(20);
+        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(gameState==GameState.STARTING) {
+                    gameState = GameState.RUNNING;
+                } else {
+                    Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start (game not working)"));
+                }
+            }
+        }.runTaskLater(PLUGIN, 20 * 15);
     }
 
     public void handleReset() {
