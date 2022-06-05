@@ -1,0 +1,5 @@
+name: bedwars
+version: '${project.version}'
+main: me.recro.bedwars.BedWars
+api-version: 1.18
+authors: [ recro, actuallysilver ]
