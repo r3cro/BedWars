@@ -6,9 +6,10 @@ import org.bukkit.entity.Player;
 
 public enum Messages {
     GAME_NOT_RUNNING("&cgame is not currently running"),
+    GAME_OVER("&cGame is over"),
     RELOADING("&aReloading...");
 
-    private String message;
+    private final String message;
 
     Messages(String message) {
         this.message = Utils.color(message);
