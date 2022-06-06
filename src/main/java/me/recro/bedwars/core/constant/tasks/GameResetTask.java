@@ -7,6 +7,7 @@ import me.recro.bedwars.core.constant.GameState;
 import me.recro.bedwars.core.constant.Messages;
 import me.recro.bedwars.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 @AllArgsConstructor
@@ -19,6 +20,9 @@ public class GameResetTask extends BukkitRunnable {
     public void run() {
         Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, resetting"));
         Messages.GAME_OVER.broadcast();
+        Player winner = Bukkit.getPlayer(gameArena.getLastAlive());
+
+        Bukkit.broadcastMessage("Winner: " + winner.getName());
 
         new BukkitRunnable() {
             @Override

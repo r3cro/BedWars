@@ -11,11 +11,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.w3c.dom.css.CSSUnknownRule;
 
 @AllArgsConstructor
 public class PlayerDeath implements Listener {
@@ -27,6 +24,11 @@ public class PlayerDeath implements Listener {
         Entity entity = event.getEntity();
         final GameArena gameArena = PLUGIN.getGameArena();
 
+        if(!gameArena.isGameRunning()) {
+            event.setCancelled(true);
+            return;
+        }
+
         if (!(entity instanceof Player)) {
             return;
         }
@@ -36,11 +38,6 @@ public class PlayerDeath implements Listener {
                 return;
             }
             if (gameArena.isGameRunning()) {
-                if(gameArena.shouldEnd()) {
-                    gameArena.endGame();
-                    return;
-                }
-
                 event.setCancelled(true);
                 player.setHealth(20);
                 player.setFireTicks(0);
@@ -57,6 +54,11 @@ public class PlayerDeath implements Listener {
 
                 gameArena.purgePlayer(player);
                 Bukkit.broadcastMessage("" + gameArena.getBedPlayerCount());
+
+                if(gameArena.shouldEnd()) {
+                    gameArena.endGame();
+                    return;
+                }
             }
         }
     }

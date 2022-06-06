@@ -11,7 +11,6 @@ import me.recro.bedwars.core.constant.tasks.GameResetTask;
 import me.recro.bedwars.utils.ItemStackBuilder;
 import me.recro.bedwars.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -65,7 +64,7 @@ public class GameArena {
     }
 
     public boolean shouldEnd() {
-        return (bedplayers.size() == 0 && isGameRunning());
+        return (bedplayers.size() == 1 && isGameRunning());
     }
 
     public void purgePlayer(Player player) {
@@ -85,6 +84,15 @@ public class GameArena {
 
     public int getBedPlayerCount() {
         return bedplayers.size();
+    }
+
+    private UUID WINNER;
+    public UUID getLastAlive() {
+        for(UUID val : bedplayers) {
+            WINNER = val;
+            break;
+        }
+        return WINNER;
     }
 
     public void giveDefaults(Player player) {
