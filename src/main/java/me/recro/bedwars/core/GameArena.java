@@ -15,6 +15,7 @@ import org.bukkit.Color;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import sun.nio.ch.Util;
 
 import java.util.*;
 
@@ -42,13 +43,14 @@ public class GameArena {
     private HashMap<UUID, Color> BED_PLAYER = new HashMap<>();
     private HashSet<UUID> DEAD_PLAYER = new HashSet<>();
 
-    private int MINIMUM_PLAYERS = 4;
+    public int MINIMUM_PLAYERS = 4;
 
     public GameArena(BedWars plugin) {
         colorList.add("BLUE");
         colorList.add("BLACK");
         colorList.add("RED");
         colorList.add("GREEN");
+        this.PLUGIN = plugin;
     }
 
     public boolean isMinimumMet() {
@@ -92,8 +94,10 @@ public class GameArena {
                     cancel();
                     if(gameState == GameState.STARTING && isMinimumMet()) {
                         startGame();
+                        Bukkit.broadcastMessage(" " + isMinimumMet());
                     } else {
                         gameState = GameState.WAITING;
+                        Bukkit.broadcastMessage(" " + isMinimumMet());
                     }
                 }
             }
@@ -137,6 +141,7 @@ public class GameArena {
         gameState = GameState.STARTING;
 
         Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start"));
+        Bukkit.getConsoleSender().sendMessage(Utils.color(("&aGameState: " + gameState)));
 
         int index = 0; // use to loop through spawn points
 
@@ -152,11 +157,14 @@ public class GameArena {
             public void run() {
                 if(gameState==GameState.STARTING) {
                     gameState = GameState.RUNNING;
+                    Bukkit.getConsoleSender().sendMessage(Utils.color("&aGameState: " + gameState));
                 } else {
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start (game not working)"));
+                    Bukkit.getConsoleSender().sendMessage(Utils.color("&aGameState: " + gameState));
                 }
             }
         }.runTaskLater(PLUGIN, 20 * 15);
+
     }
 
     public void handleReset() {

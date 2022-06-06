@@ -27,7 +27,7 @@ public class GameResetTask extends BukkitRunnable {
                 if(gameArena.shouldStart()) {
                     gameArena.startCountdown();
                 } else {
-                    Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, waiting (shouldn't start"));
+                    Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, waiting (shouldn't start)"));
                 }
             }
         }.runTaskLater(plugin, 20 * 15);
