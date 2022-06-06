@@ -171,7 +171,6 @@ public class GameArena {
 
         int index = 0; // use to loop through spawn point
 
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
@@ -200,5 +199,4 @@ public class GameArena {
     public void handleReset() {
 
     }
-
 }
