@@ -1,6 +1,5 @@
 package me.recro.bedwars.core;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import lombok.Setter;
 import me.recro.bedwars.BedWars;
@@ -9,17 +8,20 @@ import me.recro.bedwars.core.constant.events.GameEndEvent;
 import me.recro.bedwars.core.constant.events.GameResetEvent;
 import me.recro.bedwars.core.constant.events.GameStartEvent;
 import me.recro.bedwars.core.constant.tasks.GameResetTask;
+import me.recro.bedwars.utils.ItemStackBuilder;
 import me.recro.bedwars.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
-import org.bukkit.entity.Entity;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
-import sun.nio.ch.Util;
 
 import java.util.*;
 
-import static org.bukkit.Bukkit.getWorlds;
 
 public class GameArena {
 
@@ -37,19 +39,11 @@ public class GameArena {
     @Setter
     private GameState gameState = GameState.WAITING;
 
-    List<String> colorList = new ArrayList<>();
-
-    //Not sure how to handle respawns yet
-    private HashMap<UUID, Color> BED_PLAYER = new HashMap<>();
-    private HashSet<UUID> DEAD_PLAYER = new HashSet<>();
-
     public int MINIMUM_PLAYERS = 4;
+    private HashSet<UUID> bedplayers = new HashSet<>();
+    private ArrayList<Location> spawns = new ArrayList<>();
 
     public GameArena(BedWars plugin) {
-        colorList.add("BLUE");
-        colorList.add("BLACK");
-        colorList.add("RED");
-        colorList.add("GREEN");
         this.PLUGIN = plugin;
     }
 
@@ -71,18 +65,41 @@ public class GameArena {
     }
 
     public boolean shouldEnd() {
-        return false;
+        return (bedplayers.size() == 0 && isGameRunning());
     }
 
     public void purgePlayer(Player player) {
+        bedplayers.remove(player.getUniqueId());
+    }
 
+    public void addBedPlayer(Player player) {
+        bedplayers.add(player.getUniqueId());
+
+        player.setHealth(20);
+        player.setFireTicks(0);
+
+        for(PotionEffect potionEffect : player.getActivePotionEffects()) {
+            player.removePotionEffect(potionEffect.getType());
+        }
+    }
+
+    public int getBedPlayerCount() {
+        return bedplayers.size();
+    }
+
+    public void giveDefaults(Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+
+        playerInventory.clear();
+        playerInventory.setArmorContents(null);
+        playerInventory.addItem(new ItemStackBuilder(Material.WOODEN_SWORD).withEnchantment(Enchantment.DAMAGE_ALL, 50).build());
     }
 
     public void startCountdown() {
         gameState = GameState.STARTING;
 
         new BukkitRunnable() {
-            int countdown = 30;
+            int countdown = 15;
             @Override
             public void run() {
                 if (countdown != 0) {
@@ -119,6 +136,7 @@ public class GameArena {
         Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired end game."));
 
         Bukkit.getPluginManager().callEvent(new GameEndEvent());
+        MINIMUM_PLAYERS = 4;
 
         new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20 * 5);
     }
@@ -143,13 +161,17 @@ public class GameArena {
         Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start"));
         Bukkit.getConsoleSender().sendMessage(Utils.color(("&aGameState: " + gameState)));
 
-        int index = 0; // use to loop through spawn points
+        int index = 0; // use to loop through spawn point
+
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
             player.setFireTicks(0);
             player.setHealth(20);
+
+            addBedPlayer(player);
+            giveDefaults(player);
         }
 
         new BukkitRunnable() {
@@ -163,7 +185,7 @@ public class GameArena {
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aGameState: " + gameState));
                 }
             }
-        }.runTaskLater(PLUGIN, 20 * 15);
+        }.runTaskLater(PLUGIN, 20 * 3);
 
     }
 

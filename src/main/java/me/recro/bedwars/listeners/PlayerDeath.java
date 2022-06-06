@@ -3,10 +3,19 @@ package me.recro.bedwars.listeners;
 import lombok.AllArgsConstructor;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.GameArena;
+import me.recro.bedwars.core.constant.GameState;
+import me.recro.bedwars.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.w3c.dom.css.CSSUnknownRule;
 
 @AllArgsConstructor
 public class PlayerDeath implements Listener {
@@ -14,23 +23,41 @@ public class PlayerDeath implements Listener {
     private BedWars PLUGIN;
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
-        event.setDeathMessage(null);
-        event.setDroppedExp(0);
-        final Player player = event.getEntity();
-        player.setHealth(20); // Skips respawn screen
-        player.getInventory().clear();
-
+    public void onDamage(EntityDamageEvent event) {
+        Entity entity = event.getEntity();
         final GameArena gameArena = PLUGIN.getGameArena();
-        if(!gameArena.isGameRunning()) {
-            //send to lobby location
+
+        if (!(entity instanceof Player)) {
             return;
         }
-
-        if(gameArena.isGameRunning()) {
-            if(gameArena.shouldEnd()) {
-                gameArena.endGame();
+        Player player = (Player) entity;
+        if(event.getDamage() >= player.getHealth()) {
+            if(!gameArena.isGameRunning()) {
+                return;
             }
-         }
+            if (gameArena.isGameRunning()) {
+                if(gameArena.shouldEnd()) {
+                    gameArena.endGame();
+                    return;
+                }
+
+                event.setCancelled(true);
+                player.setHealth(20);
+                player.setFireTicks(0);
+                player.setSaturation(20);
+
+                player.setGameMode(GameMode.SPECTATOR);
+                player.sendTitle(Utils.color("&cYou have died..."), Utils.color("&7Respawning in 5..."));
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.setGameMode(GameMode.SURVIVAL);
+                    }
+                }.runTaskLater(PLUGIN, 20*5);
+
+                gameArena.purgePlayer(player);
+                Bukkit.broadcastMessage("" + gameArena.getBedPlayerCount());
+            }
+        }
     }
 }

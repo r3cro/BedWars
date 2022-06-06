@@ -24,7 +24,7 @@ public class GameResetTask extends BukkitRunnable {
             @Override
             public void run() {
                 gameArena.setGameState(GameState.WAITING);
-                if(gameArena.shouldStart()) {
+                if (gameArena.shouldStart()) {
                     gameArena.startCountdown();
                 } else {
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, waiting (shouldn't start)"));
