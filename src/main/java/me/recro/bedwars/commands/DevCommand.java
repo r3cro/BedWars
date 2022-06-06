@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.GameArena;
 import me.recro.bedwars.core.constant.Messages;
-import me.recro.bedwars.core.constant.menu.TestMenu;
+import me.recro.bedwars.core.constant.menu.ShopMenu;
 import me.recro.bedwars.utils.execeptions.MenuManagerException;
 import me.recro.bedwars.utils.execeptions.MenuManagerNotSetupException;
 import me.recro.bedwars.utils.menus.MenuManager;
@@ -30,15 +30,8 @@ public class DevCommand implements CommandExecutor {
         if(args.length!=1){
             player.sendMessage("/dev start");
             player.sendMessage("/dev end");
+            player.sendMessage("/dev menu");
             Messages.GAME_NOT_RUNNING.send(player);
-
-            try {
-                MenuManager.openMenu(TestMenu.class, player);
-            } catch (MenuManagerException e) {
-                throw new RuntimeException(e);
-            } catch (MenuManagerNotSetupException e) {
-                throw new RuntimeException(e);
-            }
             return true;
         }
         if(args[0].equalsIgnoreCase("start")) {
@@ -55,6 +48,14 @@ public class DevCommand implements CommandExecutor {
             gameArena.endGame();
             gameArena.MINIMUM_PLAYERS = 4;
             Messages.GAME_OVER.send(player);
+        }
+
+        if(args[0].equalsIgnoreCase("menu")) {
+            try {
+                MenuManager.openMenu(ShopMenu.class, player);
+            } catch (MenuManagerException | MenuManagerNotSetupException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return false;
