@@ -3,3 +3,8 @@ version: '${project.version}'
 main: me.recro.bedwars.BedWars
 api-version: 1.18
 authors: [ recro, actuallysilver ]
+
+commands:
+  dev:
+    description: DevCommand
+    usage: Devg
