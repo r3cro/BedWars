@@ -34,6 +34,6 @@ public class GameResetTask extends BukkitRunnable {
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, waiting (shouldn't start)"));
                 }
             }
-        }.runTaskLater(plugin, 20 * 15);
+        }.runTaskLater(plugin, 20 * 5);
     }
 }

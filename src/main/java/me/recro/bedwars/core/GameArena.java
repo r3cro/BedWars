@@ -4,13 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.constant.GameState;
-import me.recro.bedwars.core.constant.events.GameEndEvent;
-import me.recro.bedwars.core.constant.events.GameResetEvent;
-import me.recro.bedwars.core.constant.events.GameStartEvent;
 import me.recro.bedwars.core.constant.tasks.GameResetTask;
+import me.recro.bedwars.core.constant.events.*;
 import me.recro.bedwars.utils.ItemStackBuilder;
 import me.recro.bedwars.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -18,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.*;
 
 
@@ -40,6 +38,7 @@ public class GameArena {
 
     public int MINIMUM_PLAYERS = 4;
     private HashSet<UUID> bedplayers = new HashSet<>();
+    private HashSet<UUID> spectators = new HashSet<>();
     private ArrayList<Location> spawns = new ArrayList<>();
 
     public GameArena(BedWars plugin) {
@@ -69,6 +68,7 @@ public class GameArena {
 
     public void purgePlayer(Player player) {
         bedplayers.remove(player.getUniqueId());
+        spectators.remove(player.getUniqueId());
     }
 
     public void addBedPlayer(Player player) {
@@ -82,8 +82,33 @@ public class GameArena {
         }
     }
 
+    public void addSpectator(Player player) {
+        spectators.add(player.getUniqueId());
+        bedplayers.remove(player.getUniqueId());
+    }
+
     public int getBedPlayerCount() {
         return bedplayers.size();
+    }
+
+    public void respawn(Player player) {
+        Location previous = player.getLocation();
+        Location respawn_point = new Location(player.getWorld(), 0, 255, 0);
+
+        player.setHealth(20);
+        player.setFireTicks(0);
+        player.setSaturation(20);
+
+        player.teleport(respawn_point);
+        player.setGameMode(GameMode.SPECTATOR);
+        player.sendTitle(Utils.color("&cYou have died..."), Utils.color("&7Respawning in 5..."));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.teleport(previous);
+                player.setGameMode(GameMode.SURVIVAL);
+            }
+        }.runTaskLater(PLUGIN, 20*5);
     }
 
     private UUID WINNER;
@@ -107,7 +132,7 @@ public class GameArena {
         gameState = GameState.STARTING;
 
         new BukkitRunnable() {
-            int countdown = 15;
+            int countdown = 6;
             @Override
             public void run() {
                 if (countdown != 0) {
