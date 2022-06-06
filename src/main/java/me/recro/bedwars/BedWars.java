@@ -1,12 +1,12 @@
 package me.recro.bedwars;
 
 import lombok.Getter;
+import me.recro.bedwars.commands.DevCommand;
 import me.recro.bedwars.core.GameArena;
-import me.recro.bedwars.listeners.PlayerDeath;
-import me.recro.bedwars.listeners.PlayerJoin;
-import me.recro.bedwars.listeners.PlayerQuit;
-import me.recro.bedwars.listeners.ServerListener;
+import me.recro.bedwars.core.constant.GameState;
+import me.recro.bedwars.listeners.*;
 import me.recro.bedwars.utils.DataFile;
+import me.recro.bedwars.utils.menus.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -26,6 +26,7 @@ public final class BedWars extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         gameArena = new GameArena(this);
+        gameArena.setGameState(GameState.WAITING);
 
         World world = Bukkit.getWorlds().get(0);
         world.setSpawnFlags(false, false);
@@ -37,7 +38,11 @@ public final class BedWars extends JavaPlugin {
             }
         }
         registerListeners();
+
+        getCommand("dev").setExecutor(new DevCommand(this));
+
         this.configFile = new DataFile(this, "config");
+        MenuManager.setup(getServer(), this);
     }
 
     @Override
@@ -49,8 +54,8 @@ public final class BedWars extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         pluginManager.registerEvents(new PlayerDeath(this), this);
-        pluginManager.registerEvents(new PlayerJoin(), this);
-        pluginManager.registerEvents(new PlayerQuit(), this);
+        pluginManager.registerEvents(new PlayerJoin(this), this);
+        pluginManager.registerEvents(new PlayerQuit(this), this);
         pluginManager.registerEvents(new ServerListener(), this);
     }
 
