@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.constant.GameState;
+import me.recro.bedwars.core.constant.tasks.GameOreSpawnTask;
 import me.recro.bedwars.core.constant.tasks.GameResetTask;
 import me.recro.bedwars.core.constant.events.*;
 import me.recro.bedwars.utils.ItemStackBuilder;
@@ -170,6 +171,7 @@ public class GameArena {
 
         Bukkit.getPluginManager().callEvent(new GameEndEvent());
         MINIMUM_PLAYERS = 4;
+        GameOreSpawnTask.task.cancel();
 
         new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20 * 5);
     }
@@ -211,6 +213,7 @@ public class GameArena {
             public void run() {
                 if(gameState==GameState.STARTING) {
                     gameState = GameState.RUNNING;
+
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aGameState: " + gameState));
                 } else {
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start (game not working)"));
@@ -218,7 +221,7 @@ public class GameArena {
                 }
             }
         }.runTaskLater(PLUGIN, 20 * 3);
-
+        new GameOreSpawnTask(PLUGIN).runTaskLater(PLUGIN, 20);
     }
 
     public void handleReset() {
