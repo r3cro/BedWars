@@ -42,8 +42,8 @@ public final class BedWars extends JavaPlugin {
         getCommand("dev").setExecutor(new DevCommand(this));
 
         this.configFile = new DataFile(this, "config");
-        MenuManager.setup(getServer(), this);
         getConfigFile().save();
+        MenuManager.setup(getServer(), this);
     }
 
     @Override

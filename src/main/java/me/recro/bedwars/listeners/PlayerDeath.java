@@ -3,6 +3,7 @@ package me.recro.bedwars.listeners;
 import lombok.AllArgsConstructor;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.GameArena;
+import me.recro.bedwars.core.constant.events.GameStartEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
