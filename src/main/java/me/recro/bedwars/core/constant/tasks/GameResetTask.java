@@ -20,9 +20,14 @@ public class GameResetTask extends BukkitRunnable {
     public void run() {
         Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, resetting"));
         Messages.GAME_OVER.broadcast();
+
         Player winner = Bukkit.getPlayer(gameArena.getLastAlive());
 
-        Bukkit.broadcastMessage("Winner: " + winner.getName());
+        if(winner!=null) {
+            Bukkit.broadcastMessage("Winner: " + winner.getName());
+        } else {
+            Bukkit.broadcastMessage("no winner");
+        }
 
         new BukkitRunnable() {
             @Override
@@ -34,6 +39,6 @@ public class GameResetTask extends BukkitRunnable {
                     Bukkit.getConsoleSender().sendMessage(Utils.color("&aGame reset task, waiting (shouldn't start)"));
                 }
             }
-        }.runTaskLater(plugin, 20 * 5);
+        }.runTaskLater(plugin, 20);
     }
 }

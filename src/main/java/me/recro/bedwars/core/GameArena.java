@@ -64,7 +64,7 @@ public class GameArena {
     }
 
     public boolean shouldEnd() {
-        return (bedplayers.size() == 1 && isGameRunning());
+        return (bedplayers.size() == 1 || bedplayers.size() == 0 && isGameRunning());
     }
 
     public void purgePlayer(Player player) {
@@ -93,8 +93,10 @@ public class GameArena {
     }
 
     public void respawn(Player player) {
+
         Location previous = player.getLocation();
         Location respawn_point = new Location(player.getWorld(), 0, 255, 0);
+        Location spawn = new Location(player.getWorld(),0, 66,0);
 
         player.setHealth(20);
         player.setFireTicks(0);
@@ -106,8 +108,12 @@ public class GameArena {
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.teleport(previous);
                 player.setGameMode(GameMode.SURVIVAL);
+                if(!isGameRunning()) {
+                    player.teleport(spawn);
+                    return;
+                }
+                player.teleport(previous);
             }
         }.runTaskLater(PLUGIN, 20*5);
     }
@@ -173,7 +179,7 @@ public class GameArena {
         MINIMUM_PLAYERS = 4;
         GameOreSpawnTask.task.cancel();
 
-        new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20 * 5);
+        new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20);
     }
 
     public void resetGame() {
