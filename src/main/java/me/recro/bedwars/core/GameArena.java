@@ -31,16 +31,16 @@ public class GameArena {
         generator/location/shop
      */
 
-    private BedWars PLUGIN;
+    private final BedWars PLUGIN;
 
     @Getter
     @Setter
     private GameState gameState = GameState.WAITING;
 
     public int MINIMUM_PLAYERS = 4;
-    private HashSet<UUID> bedplayers = new HashSet<>();
-    private HashSet<UUID> spectators = new HashSet<>();
-    private ArrayList<Location> spawns = new ArrayList<>();
+    private final HashSet<UUID> bedplayers = new HashSet<>();
+    private final HashSet<UUID> spectators = new HashSet<>();
+    private final ArrayList<Location> spawns = new ArrayList<>();
 
     public GameArena(BedWars plugin) {
         this.PLUGIN = plugin;
@@ -182,11 +182,6 @@ public class GameArena {
         new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20);
     }
 
-    public void resetGame() {
-        Bukkit.getPluginManager().callEvent(new GameResetEvent());
-        this.handleReset();
-    }
-
     public void handleStart() {
         if(!isMinimumMet()) {
             Bukkit.getConsoleSender().sendMessage(Utils.color("&aFired handle start (min not met)"));
@@ -228,9 +223,5 @@ public class GameArena {
             }
         }.runTaskLater(PLUGIN, 20 * 3);
         new GameOreSpawnTask(PLUGIN).runTaskLater(PLUGIN, 20);
-    }
-
-    public void handleReset() {
-
     }
 }
