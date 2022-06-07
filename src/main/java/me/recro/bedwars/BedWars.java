@@ -43,6 +43,7 @@ public final class BedWars extends JavaPlugin {
 
         this.configFile = new DataFile(this, "config");
         MenuManager.setup(getServer(), this);
+        getConfigFile().save();
     }
 
     @Override

@@ -1,26 +1,19 @@
 package me.recro.bedwars.commands;
 
-import lombok.AllArgsConstructor;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.GameArena;
-import me.recro.bedwars.core.constant.GameState;
 import me.recro.bedwars.core.constant.Messages;
 import me.recro.bedwars.core.constant.menu.ShopMenu;
 import me.recro.bedwars.core.constant.tasks.GameOreSpawnTask;
-import me.recro.bedwars.core.constant.tasks.GameResetTask;
 import me.recro.bedwars.utils.Utils;
 import me.recro.bedwars.utils.execeptions.MenuManagerException;
 import me.recro.bedwars.utils.execeptions.MenuManagerNotSetupException;
 import me.recro.bedwars.utils.menus.MenuManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 public class DevCommand implements CommandExecutor {
 
@@ -78,8 +71,6 @@ public class DevCommand implements CommandExecutor {
                 throw new RuntimeException(e);
             }
         }
-
-
         if(args[0].equalsIgnoreCase("oregen")) {
 
             if(running == false) {
@@ -93,7 +84,6 @@ public class DevCommand implements CommandExecutor {
             }
             return true;
         }
-
         return false;
     }
 }

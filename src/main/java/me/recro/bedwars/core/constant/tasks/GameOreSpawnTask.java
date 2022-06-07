@@ -2,10 +2,11 @@ package me.recro.bedwars.core.constant.tasks;
 
 import me.recro.bedwars.BedWars;
 import org.bukkit.*;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
 
 public class GameOreSpawnTask extends BukkitRunnable {
 
@@ -20,8 +21,15 @@ public class GameOreSpawnTask extends BukkitRunnable {
     private Integer counter = 0;
 
     private void spawnItem(String worldName, ItemStack itemStack) {
-        Location oreSpawnLocation = new Location(Bukkit.getWorld("world"), 0,66,0);
-        Bukkit.getWorld(worldName).dropItem(oreSpawnLocation, itemStack);
+        for(String key : plugin.getConfigFile().getConfigurationSection("generators", false)) {
+
+            int x = plugin.getConfigFile().getInt("generators." + key + ".x");
+            int y = plugin.getConfigFile().getInt("generators." + key + ".y");
+            int z = plugin.getConfigFile().getInt("generators." + key + ".z");
+
+            Location ore = new Location(Bukkit.getWorld(worldName), x,y,z);
+            Bukkit.getWorld(worldName).dropItem(ore, itemStack);
+        }
     }
 
     @Override
