@@ -18,6 +18,7 @@ public class PlayerQuit implements Listener {
         event.setQuitMessage(null);
         final Player player = event.getPlayer();
         final GameArena gameArena = plugin.getGameArena();
+        gameArena.purgePlayer(player);
     }
 
 }
