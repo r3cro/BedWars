@@ -35,13 +35,4 @@ public class PlayerInteract implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        Entity entity = event.getEntity();
-        if(!(entity instanceof Player)) {
-            event.setCancelled(true);
-        }
-    }
-
 }
