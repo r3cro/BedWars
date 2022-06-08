@@ -5,14 +5,15 @@ import lombok.Setter;
 import me.recro.bedwars.BedWars;
 import me.recro.bedwars.core.constant.GameState;
 import me.recro.bedwars.core.constant.tasks.GameOreSpawnTask;
+import me.recro.bedwars.core.constant.tasks.GameResetBlocksTask;
 import me.recro.bedwars.core.constant.tasks.GameResetTask;
 import me.recro.bedwars.core.constant.events.*;
 import me.recro.bedwars.utils.ItemStackBuilder;
 import me.recro.bedwars.utils.Utils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,6 +40,8 @@ public class GameArena {
     private final HashSet<UUID> bedplayers = new HashSet<>();
     private final HashSet<UUID> spectators = new HashSet<>();
     private final ArrayList<Location> spawns = new ArrayList<>();
+
+    public HashSet<Block> placed = new HashSet<>();
 
     public GameArena(BedWars plugin) {
         this.PLUGIN = plugin;
@@ -183,6 +186,7 @@ public class GameArena {
         }
 
         new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20);
+        new GameResetBlocksTask(PLUGIN, this).runTaskLater(PLUGIN,20);
     }
 
     public void handleStart() {

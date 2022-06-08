@@ -10,6 +10,7 @@ import me.recro.bedwars.utils.DataFile;
 import me.recro.bedwars.utils.menus.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -63,6 +64,8 @@ public final class BedWars extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoin(this), this);
         pluginManager.registerEvents(new PlayerQuit(this), this);
         pluginManager.registerEvents(new ServerListener(), this);
+        pluginManager.registerEvents(new PlayerInteract(), this);
+        pluginManager.registerEvents(new BlockPlace(this), this);
     }
 
     public DataFile getConfigFile() {
