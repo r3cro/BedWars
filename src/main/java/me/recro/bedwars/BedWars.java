@@ -52,7 +52,9 @@ public final class BedWars extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         for(Entity entity : Bukkit.getWorld("world").getEntities()) {
-            entity.remove();
+            if(!(entity instanceof Player)) {
+                entity.remove();
+            }
         }
     }
 
