@@ -35,18 +35,17 @@ public class ShopMenu extends Menu {
     public void handleMenu(InventoryClickEvent event) throws MenuManagerNotSetupException, MenuManagerException {
         switch (event.getCurrentItem().getType()) {
             case STONE_SWORD:
-                player.sendMessage("sword");
+                purchaseItems(Material.STONE_SWORD, 1, Material.DIAMOND, 32, player);
                 break;
             case WHITE_WOOL:
-                purcahseItems(Material.WHITE_WOOL, 16, Material.IRON_INGOT, 4, player);
+                purchaseItems(Material.WHITE_WOOL, 16, Material.IRON_INGOT, 4, player);
                 break;
             default:
-
                 player.sendMessage(Utils.color("&cItem not found. Contact administration."));
         }
     }
 
-    private void purcahseItems(Material purchaseItem, Integer amount, Material sellItem, Integer cost, Player player) {
+    private void purchaseItems(Material purchaseItem, Integer amount, Material sellItem, Integer cost, Player player) {
         if(player.getInventory().contains(sellItem, cost)) {
             player.getInventory().removeItem(new ItemStackBuilder(sellItem).withAmount(cost).build());
             player.getInventory().addItem(new ItemStackBuilder(purchaseItem).withAmount(amount).build());
