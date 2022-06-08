@@ -150,10 +150,8 @@ public class GameArena {
                     cancel();
                     if(gameState == GameState.STARTING && isMinimumMet()) {
                         startGame();
-                        Bukkit.broadcastMessage(" " + isMinimumMet());
                     } else {
                         gameState = GameState.WAITING;
-                        Bukkit.broadcastMessage(" " + isMinimumMet());
                     }
                 }
             }
