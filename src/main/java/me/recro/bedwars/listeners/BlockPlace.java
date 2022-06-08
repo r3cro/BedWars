@@ -18,6 +18,11 @@ public class BlockPlace implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         final GameArena gameArena = plugin.getGameArena();
+
+        if(event.getBlock().getType() == Material.TNT) {
+            event.setCancelled(true);
+        }
+
         if(!gameArena.isGameRunning()) return;
         gameArena.placed.add(event.getBlockPlaced());
     }

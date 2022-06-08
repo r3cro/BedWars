@@ -41,6 +41,7 @@ public class ShopMenu extends Menu {
                 purcahseItems(Material.WHITE_WOOL, 16, Material.IRON_INGOT, 4, player);
                 break;
             default:
+
                 player.sendMessage(Utils.color("&cItem not found. Contact administration."));
         }
     }
