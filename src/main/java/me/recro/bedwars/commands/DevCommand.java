@@ -45,6 +45,7 @@ public class DevCommand implements CommandExecutor {
             player.sendMessage(Utils.color("&eGameState: &c" + gameArena.getGameState()));
             return true;
         }
+
         if(args[0].equalsIgnoreCase("start")) {
             if(!gameArena.isGameRunning()) {
                 gameArena.MINIMUM_PLAYERS = 0;

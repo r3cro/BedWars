@@ -8,3 +8,6 @@ commands:
   dev:
     description: DevCommand
     usage: Devg
+  game:
+    description: GameCommand
+    usage: /game

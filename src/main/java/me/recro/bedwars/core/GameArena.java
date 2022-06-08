@@ -9,12 +9,10 @@ import me.recro.bedwars.core.constant.tasks.GameResetTask;
 import me.recro.bedwars.core.constant.events.*;
 import me.recro.bedwars.utils.ItemStackBuilder;
 import me.recro.bedwars.utils.Utils;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -178,6 +176,11 @@ public class GameArena {
         Bukkit.getPluginManager().callEvent(new GameEndEvent());
         MINIMUM_PLAYERS = 4;
         GameOreSpawnTask.task.cancel();
+        for(Entity entity : Bukkit.getWorld("world").getEntities()) {
+            if (!(entity instanceof Player)) {
+                entity.remove();
+            }
+        }
 
         new GameResetTask(PLUGIN, this).runTaskLater(PLUGIN, 20);
     }
@@ -222,6 +225,21 @@ public class GameArena {
                 }
             }
         }.runTaskLater(PLUGIN, 20 * 3);
+
+        for(String key : PLUGIN.getConfigFile().getConfigurationSection("shops", false)) {
+
+            int x = PLUGIN.getConfigFile().getInt("shops." + key + ".x");
+            int y = PLUGIN.getConfigFile().getInt("shops." + key + ".y");
+            int z = PLUGIN.getConfigFile().getInt("shops." + key + ".z");
+
+            World world = Bukkit.getWorld("world");
+            Location loc = new Location(world ,x,y,z);
+            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+            villager.setAware(false);
+            villager.setCustomName(Utils.color("&aItem Shop"));
+            villager.setCustomNameVisible(true);
+        }
+
         new GameOreSpawnTask(PLUGIN).runTaskLater(PLUGIN, 20);
     }
 }

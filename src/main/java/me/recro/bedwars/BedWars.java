@@ -2,6 +2,7 @@ package me.recro.bedwars;
 
 import lombok.Getter;
 import me.recro.bedwars.commands.DevCommand;
+import me.recro.bedwars.commands.GameCommand;
 import me.recro.bedwars.core.GameArena;
 import me.recro.bedwars.core.constant.GameState;
 import me.recro.bedwars.listeners.*;
@@ -40,6 +41,7 @@ public final class BedWars extends JavaPlugin {
         registerListeners();
 
         getCommand("dev").setExecutor(new DevCommand(this));
+        getCommand("game").setExecutor(new GameCommand(this));
 
         this.configFile = new DataFile(this, "config");
         getConfigFile().save();
@@ -49,6 +51,9 @@ public final class BedWars extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for(Entity entity : Bukkit.getWorld("world").getEntities()) {
+            entity.remove();
+        }
     }
 
     private void registerListeners() {
